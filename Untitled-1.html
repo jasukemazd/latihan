@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jasuke Maz D</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      background: white; /* Default putih */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.5s ease;
+    }
+
+    body.home-bg {
+      background: url('jasuke web.jpg') no-repeat center center/cover;
+    }
+
+    body.white-bg {
+      background: rgb(219, 219, 219);
+    }
+
+    .wrapper {
+      width: 100vw;
+      max-width: 400px;
+      height: 100vh;
+      background: transparent;
+      border-radius: 0;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.0);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+      color: white;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+
+    .section {
+      display: none;
+      padding: 20px;
+      height: calc(100vh - 60px);
+      overflow: hidden;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* Container untuk mengatur posisi tengah dan scroll */
+    .products-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .products {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 40px; /* ruang untuk dots */
+      scroll-behavior: smooth;
+      width: 100%;
+      scrollbar-width: none; /* Firefox */
+    }
+    .products::-webkit-scrollbar {
+      display: none; /* Chrome, Safari */
+    }
+
+    .product-card {
+      flex: 0 0 auto;
+      width: 310px;
+      background: #bbbbbb;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 55px;
+      text-align: center;
+      scroll-snap-align: center;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      cursor: pointer;
+      opacity: 0.6;
+      transform: scale(0.8);
+    }
+
+    .product-card.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .product-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .product-card h3 {
+      margin: 10px 0 5px;
+    }
+
+    /* Pisahkan warna untuk harga dan deskripsi */
+    .product-card p.price {
+      color: #e60000; /* Merah untuk harga */
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .product-card p.description {
+      color: #2d2d2d; /* Abu gelap untuk deskripsi */
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .product-card button {
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ffa500;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .product-card button:hover {
+      background-color: #e68a00;
+    }
+
+    /* Dots navigasi */
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      background: #cc1818;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .dot.active {
+      background: #ff9d14;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      justify-content: space-around;
+      background-color: #ff9d14;
+      border-radius: 0 0 10px 10px;
+      padding: 8px 0;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    }
+
+    .bottom-nav button {
+      background: none;
+      border: none;
+      color: rgb(255, 255, 255);
+      font-size: 0.8rem;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .bottom-nav button i {
+      font-size: 1.2rem;
+      display: block;
+    }
+
+    .profile, .contact {
+      padding: 20px;
+      border-radius: 0px;
+      width: 40%;
+      max-width: 1200px;
+      min-height: 300px;
+      margin: 0 auto;
+    }
+
+    /* Responsive untuk desktop */
+    @media (min-width: 768px) {
+      body.home-bg {
+        background: url('jasuke web.jpg') no-repeat center center/cover;
+      }
+
+      .wrapper {
+        width: 100vw;
+        max-width: none;
+        height: 100vh;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .bottom-nav {
+        max-width: none;
+        border-radius: 0;
+      }
+    }
+  </style>
+
+  <!-- SEO Meta -->
+  <meta name="google-site-verification" content="j1Ut9_hwLIgRWXF2HS-iCfq3bmBtB4byDMvKZlleaeo" />
+  <meta name="description" content="Jasuke Maz D - Camilan sehat berbahan dasar jagung manis lokal. Tersedia varian Milo, Coklat, dan Keju.">
+  <meta name="keywords" content="jasuke, jasuke cimahi, jagung susu keju, camilan sehat, UMKM Cimahi, snack jagung">
+  <meta name="author" content="Dinar Jhonata">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://jasukemazd.github.io/web-kelompok-4/">
+  <meta property="og:title" content="Jasuke Maz D">
+  <meta property="og:description" content="Camilan Sehat, Hangat & Praktis Berbasis Jagung Manis Lokal.">
+  <meta property="og:image" content="https://jasukemazd.github.io/web-kelompok-4/jasuke-mazd/profil.jpg">
+  <meta property="og:url" content="https://jasukemazd.github.io/web-kelompok-4/">
+  <meta name="twitter:card" content="summary_large_image">
+
+</head>
+<body class="home-bg">
+  <div class="wrapper">
+    <section class="section active" id="home">
+      <header>
+        <h1>JASUKE MAZ D</h1>
+        <p>Nikmati kelezatan Jasuke (Jagung Susu Keju) yang hangat dan praktis, dibuat dari jagung manis lokal pilihan.
+        Pilihan rasa kami cocok untuk menemani hari santaimu atau sebagai camilan sehat kapan saja!</p>
+      </header>
+    </section>
+
+    <section class="section" id="menu">
+      <div class="products-container">
+        <div class="products" id="products">
+          <div class="product-card">
+            <img src="jasuke 5.jpg" alt="Jasuke Original" />
+            <h3>Jasuke Original</h3>
+            <p class="price">Rp 5.000 (10 OZ)</p>
+            <p class="description">Klasik dan sederhana, rasa jagung manis asli dengan sentuhan susu dan keju lembut yang lumer di mulut.</p>
+            <a href="https://wa.me/6283898101912?text=Saya%20mau%20pesan%20Jasuke%20Original"><button>WhatsApp</button></a>
+            <a href="https://www.instagram.com/jasuke_mazde/"><button>Instagram</button></a>
+            <a href="https://r.grab.com/g/2-1-6-C7D3EUX2GKBAVN"><button>Grabfood</button></a>
+          </div>
+
+          <div class="product-card">
+            <img src="jasuke 2.jpg" alt="Jasuke Milo" />
+            <h3>Jasuke Milo</h3>
+            <p class="price">Rp 5.000 (10 OZ)</p>
+            <p class="description">Perpaduan rasa Milo coklat yang khas dan jagung manis legit, dijamin bikin nagih!</p>
+            <a href="https://wa.me/6283898101912?text=Saya%20mau%20pesan%20Jasuke%20Milo"><button>WhatsApp</button></a>
+            <a href="https://www.instagram.com/jasuke_mazde/"><button>Instagram</button></a>
+            <a href="https://r.grab.com/g/2-1-6-C7D3EUX2GKBAVN"><button>Grabfood</button></a>
+          </div>
+
+          <div class="product-card">
+            <img src="jasuke 1.jpg" alt="Jasuke Coklat" />
+            <h3>Jasuke Coklat</h3>
+            <p class="price">Rp 5.000 (10 OZ)</p>
+            <p class="description">Coklat pekat berpadu dengan jagung manis yang membuat rasa lebih nikmat dan gurih.</p>
+            <a href="https://wa.me/6283898101912?text=Saya%20mau%20pesan%20Jasuke%20Coklat"><button>WhatsApp</button></a>
+            <a href="https://www.instagram.com/jasuke_mazde/"><button>Instagram</button></a>
+            <a href="https://r.grab.com/g/2-1-6-C7D3EUX2GKBAVN"><button>Grabfood</button></a>
+          </div>
+
+          <div class="product-card">
+            <img src="jasuke 3.jpg" alt="Jasuke Keju" />
+            <h3>Jasuke Keju</h3>
+            <p class="price">Rp 5.000 (10 OZ)</p>
+            <p class="description">Varian keju meleleh yang creamy, cocok untuk pecinta keju sejati.</p>
+            <a href="https://wa.me/6283898101912?text=Saya%20mau%20pesan%20Jasuke%20Keju"><button>WhatsApp</button></a>
+            <a href="https://www.instagram.com/jasuke_mazde/"><button>Instagram</button></a>
+            <a href="https://r.grab.com/g/2-1-6-C7D3EUX2GKBAVN"><button>Grabfood</button></a>
+          </div>
+
+          <div class="product-card">
+            <img src="jasuke 4.jpg" alt="Jasuke Madu" />
+            <h3>Jasuke Madu</h3>
+            <p class="price">Rp 5.000 (10 OZ)</p>
+            <p class="description">Manis alami madu berpadu dengan jagung manis, rasa yang lembut dan berbeda.</p>
+            <a href="https://wa.me/6283898101912?text=Saya%20mau%20pesan%20Jasuke%20Madu"><button>WhatsApp</button></a>
+            <a href="https://www.instagram.com/jasuke_mazde/"><button>Instagram</button></a>
+            <a href="https://r.grab.com/g/2-1-6-C7D3EUX2GKBAVN"><button>Grabfood</button></a>
+          </div>
+        </div>
+
+        <div class="dots" id="dots"></div>
+      <div id="current-index" style="text-align:center; margin-top: 10px; font-weight: bold; color: #444;"></div>
+    </section>
+
+    <section class="section" id="profile">
+      <div class="profile">
+        <h2>Tentang Kami</h2>
+        <p>Jasuke Maz D adalah usaha mikro kecil dan menengah (UMKM) yang bergerak di bidang kuliner khususnya camilan berbahan dasar jagung manis lokal. Kami berkomitmen menyediakan produk sehat, lezat, dan praktis untuk semua kalangan. Produk kami dibuat dengan bahan-bahan berkualitas dan tanpa bahan pengawet.</p>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="contact">
+        <h2>Hubungi Kami</h2>
+        <p>Untuk pemesanan dan informasi lebih lanjut, silakan hubungi kami melalui WhatsApp atau Instagram.</p>
+        <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/6283898101912" target="_blank">+62 838-9810-1912</a></p>
+        <p><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/jasuke_mazde/" target="_blank">@jasuke_mazde</a></p>
+      </div>
+    </section>
+
+    <nav class="bottom-nav">
+      <button id="btn-home"><i class="fa fa-home"></i>Home</button>
+      <button id="btn-menu"><i class="fa fa-list"></i>Menu</button>
+      <button id="btn-profile"><i class="fa fa-user"></i>Profile</button>
+      <button id="btn-contact"><i class="fa fa-envelope"></i>Contact</button>
+    </nav>
+  </div>
+  
+  <script>
+    // Ganti section dengan navigasi bawah
+    const sections = document.querySelectorAll('.section');
+    const btnHome = document.getElementById('btn-home');
+    const btnMenu = document.getElementById('btn-menu');
+    const btnProfile = document.getElementById('btn-profile');
+    const btnContact = document.getElementById('btn-contact');
+    const body = document.body;
+
+    btnHome.addEventListener('click', () => {
+      setActiveSection('home');
+      body.className = 'home-bg';
+    });
+    btnMenu.addEventListener('click', () => {
+      setActiveSection('menu');
+      body.className = 'white-bg';
+    });
+    btnProfile.addEventListener('click', () => {
+      setActiveSection('profile');
+      body.className = 'white-bg';
+    });
+    btnContact.addEventListener('click', () => {
+      setActiveSection('contact');
+      body.className = 'white-bg';
+    });
+
+    function setActiveSection(id) {
+      sections.forEach(section => {
+        section.classList.toggle('active', section.id === id);
+      });
+    }
+
+    // Produk slider dengan dots
+    const products = document.getElementById('products');
+    const productCards = products.querySelectorAll('.product-card');
+    const dotsContainer = document.getElementById('dots');
+
+    // Buat dot sesuai jumlah produk
+    productCards.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      dot.addEventListener('click', () => {
+        productCards[i].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+      });
+      dotsContainer.appendChild(dot);
+    });
+
+    const dots = dotsContainer.querySelectorAll('.dot');
+
+    // Fungsi update active berdasarkan scroll posisi
+    function updateActive() {
+      let center = products.scrollLeft + products.offsetWidth / 2;
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+
+      productCards.forEach((card, i) => {
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const distance = Math.abs(center - cardCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = i;
+        }
+      });
+
+      productCards.forEach((card, i) => {
+        card.classList.toggle('active', i === closestIndex);
+        dots[i].classList.toggle('active', i === closestIndex);
+      });
+    }
+
+    products.addEventListener('scroll', () => {
+      if(this._scrollTimeout) clearTimeout(this._scrollTimeout);
+      this._scrollTimeout = setTimeout(updateActive, 100);
+    });
+
+    // Set pertama kali aktif
+    updateActive();
+  </script>
+</body>
+</html>
